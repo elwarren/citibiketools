@@ -1,0 +1,38 @@
+{
+   "version": "0.0.1",
+   "name": "CitibikeTools",
+   "author": "Warren Lindsey <warren.lindsey+npmjs@gmail.com> (https://github.com/elwarren)",
+   "description": "do stuff with citibike trip data",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/elwarren/citibiketools.git"
+   },
+   "bugs": {
+      "url": "https://github.com/elwarren/citibiketools/issues"
+   },
+   "licenses": [{
+      "type": "MIT",
+      "url": "https://github.com/elwarren/citibiketools/raw/master/LICENSE"
+   }],
+   "private": true,
+   "preferGlobal": false,
+   "keywords": ["citibike", "bike", "bicycle", "trip", "bike"],
+   "engines": {
+      "node": "~0.10.24"
+   },
+   "dependencies": {
+      "request": "*",
+      "async": ">0.8.0",
+      "cheerio": "*",
+      "time": "*",
+      "cron": "*",
+      "twitter": "*",
+      "sqlite3": "*",
+      "citibike": "*",
+      "citibiketrips": "git://github.com/elwarren/citibiketrips.git"
+   },
+   "devDependencies": {
+      "mocha": "*",
+      "chai": "*"
+   }
+}
