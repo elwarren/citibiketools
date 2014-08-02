@@ -130,7 +130,7 @@ config.json = {
         "bikeKey": 1234567
     },
     "twitter": {
-        "dm": "elwarren",
+        "dm": "twittername",
         "consumer_key": "yourkey",
         "consumer_secret": "yoursecret",
         "access_token_key": "yourtokenkey",
