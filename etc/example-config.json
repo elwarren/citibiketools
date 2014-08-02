@@ -1,8 +1,37 @@
-{
+config.json = {
     "debug": 0,
-    "tz": "America/New_York",
+    "path": {
+        "dir": "/tmp",
+        "trips": {
+            "json": "/tmp/alltrips.json",
+            "csv": "/tmp/alltrips.csv"
+        },
+        "stations": {
+            "json": "/tmp/allstations.json",
+            "csv": "/tmp/allstations.csv"
+        },
+        "sqldb": "/tmp/citibike.sqlite3"
+    },
+    "commuter": {
+	    "wait": 300,
+	    "intervalMins": 3,
+	    "stopMins": 60,
+	    "msg": "I'm riding a bike! I've been out for at least %d mins.",
+	    "tz": "America/New_York"
+	},
     "citibikenyc": {
-        "user": "yourlogin",
-        "pass": "yourpassword"
+        "user": "yourusername",
+        "pass": "yourpassword!",
+        "homeStations": [123, 456],
+        "workStations": [789],
+        "memberId": 123456,
+        "bikeKey": 1234567
+    },
+    "twitter": {
+        "dm": "elwarren",
+        "consumer_key": "yourkey",
+        "consumer_secret": "yoursecret",
+        "access_token_key": "yourtokenkey",
+        "access_token_secret": "yourtokensecret"
     }
 }
