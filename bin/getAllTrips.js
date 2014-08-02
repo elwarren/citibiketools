@@ -1,12 +1,7 @@
 #!/opt/local/bin/node
-// dump my entire citibike history to json
+ // dump my entire citibike history to json
 'use strict';
-
-var config = require('../../citibike/citibike-config.json');
-if (process.argv[2]) {
-	config.debug = process.argv[2];
-}
-
+var config = require('../lib/configger');
 var CitibikeTrips = require('CitibikeTrips');
 var ct = new CitibikeTrips(config);
 

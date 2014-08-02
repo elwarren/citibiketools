@@ -5,14 +5,13 @@
 // TODO add 4sq checkin to stations? Should be a new script
 
 // requires 
+var config = require('../lib/configger');
 var time = require('time');
 var util = require('util');
 var CronJob = require('cron').CronJob;
 var twitter = require('twitter');
 var CitibikeTrips = require('CitibikeTrips');
-var config = require('../etc/config.json');
 // vars
-config.debug = process.argv[2] || config.debug;
 var bike = new CitibikeTrips(config);
 // TODO move cronSched into config file
 var cronSched = '10 */' + config.intervalMins + ' 7-23 * * *';

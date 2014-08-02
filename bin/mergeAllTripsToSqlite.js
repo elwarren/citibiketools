@@ -1,24 +1,17 @@
 #!/opt/local/bin/node
-// dump my entire citibike history to sqlite
+ // dump my entire citibike history to sqlite
 'use strict';
-// TODO these relative paths appear to be relative to where the module is calling them from, not the opening sciprt? Should move them into config file and use absolute paths instead to avoid this.
-var trips_json = '../../alltrips.json';
-var trips_sql = '../alltrips.sqlite3';
-var config = require('../etc/config.json');
-
-var trips = require(trips_json);
-if (process.argv[2]) {
-	config.debug = process.argv[2];
-}
+var config = require('../lib/configger');
+var trips = require(config.path.trips.json);
 
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(trips_sql, function(err) {
+var db = new sqlite3.Database(config.path.sqldb, function(err) {
 	if (err) {
-		console.warn('Error opening database file [' + trips_sql + ']');
+		console.warn('Error opening database file [' + config.path.sqldb + ']');
 		throw err;
 	} else {
-        console.log('Opened sqlite3 file [' + trips_sql + ']');
-    }
+		console.log('Opened sqlite3 file [' + config.path.sqldb + ']');
+	}
 });
 
 // example trip json
@@ -44,7 +37,7 @@ db.serialize(function() {
 	// TODO rewrite update as an object with named parameters.
 	// db.run("UPDATE tbl SET name = $name WHERE id = $id", { $id: 2, $name: "bar" });
 	// 13 columns 
-    // id, startStationId, startTimestamp, endStationId, endTimestamp, durationSeconds, endDate, startDate, durationMins, nowSecs, nowMins, isOpen, retrievedTimestamp
+	// id, startStationId, startTimestamp, endStationId, endTimestamp, durationSeconds, endDate, startDate, durationMins, nowSecs, nowMins, isOpen, retrievedTimestamp
 
 	var stmt = db.prepare("INSERT OR REPLACE INTO trips VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 	for (var trip in trips) {
@@ -57,9 +50,9 @@ db.serialize(function() {
 	stmt.finalize();
 
 	db.each("SELECT count(*) totalTrips FROM trips", function(err, row) {
-        if (err) {
-            throw err;
-        }
+		if (err) {
+			throw err;
+		}
 		console.log(row.totalTrips);
 	});
 });

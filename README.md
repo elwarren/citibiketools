@@ -1,57 +1,129 @@
-# CitibikeTrips.js 
+# Citibike Tools
 
-A node.js module to scrape your personal trip data from the CitiBike website.
+Some simple node.js programs to manipulate and report on your Citibike trip 
+history.  To be used to used with the Citibike and CitibikeTrips modules.
 
 ## Install
 TODO this has not been released to NPM yet
 
 ```
-git clone https://github.com/elwarren/citibiketrips.git
+git clone https://github.com/elwarren/citibiketools.git
 npm install
 ```
 
 ## Usage
 
 You'll need to provide your username and password to the http://citibikenyc.com
+site in a config file.  Either save this config.json in the package etc directory
+or pass it in on the command line as the first parameter.
 
-```node
-var config = require('etc/config.json');
-var CitibikeTrips = require('CitibikeTrips');
-var bt = CitibikeTrips(config);
+Currently the get*.js code will query the Citibike website and dump results to
+STDOUT for simplicity.  Eventually these will go into files defined in config.json.
 
-bt.getLastTrip(function(trip) {
-  // return single json object of most recent trip
-  console.log(trip);
+The merge*.js code will read these json files from disk and create a sqlite 
+database.  This can then be used to query and report on your trip history.
+
+Build trip and station database:
+
+```
+$ cd citibiketools
+$ bin/getAllTrips.js ~/.citibike-config.json > ~/data/citibike/trips.js
+$ bin/getAllStations.js ~/.citibike-config.json > ~/data/citibike/stations.js
+$ bin/mergeStationsToSql.js ~/.citibike-config.json
+$ bin/mergeTripsToSql.js ~/.citibike-config.json
+```
+
+Show top two trips you've ridden:
+
+```
+$ sqlite3 ~/data/citibike/citibike.sqlite3
+sqlite>  select startStationId, endStationId, count(*)
+   ...> from trips 
+   ...> where startStationId != endStationId 
+   ...> group by startStationId, endStationId 
+   ...> order by 3 desc limit 2;
+512|434|12
+212|512|11
+```
+
+For me this shows my ride to work and my ride home.
+
+What days of the week do you ride most?  Weekends, weekdays, wednesdays?  Week starts with 0=Sunday.
+
+```
+sqlite> select strftime('%w', startTimestamp, 'unixepoch', 'localtime') dayofweek, count(*) from trips group by 1 order by 1;
+0|5
+1|13
+2|7
+3|12
+4|14
+5|7
+6|6
+```
+
+## Database schema
+This is changing as I add and rename columns.  It mostly resembles the json source objects.  Currently:
+
+```
+sqlite> .schema
+CREATE TABLE trips ( id int PRIMARY KEY, startStationId int, startTimestamp int, endStationId int, endTimestamp int, durationSeconds int, endDate date, startDate date, durationMins int, nowSecs int, nowMins int, isOpen boolean, retrievedTimestamp int );
+
+CREATE TABLE stations ( id int PRIMARY KEY, status varchar2(20), latitude float, longitude float, label varchar2(60), stationAddress varchar2(60), availableBikes int, availableDocks int, nearbyStations varchar2(2000));
+
+CREATE TABLE stationsNearby ( id int, nearbyId, distance float );
+
+CREATE UNIQUE INDEX snun ON stationsNearby (id, nearbyId);
+
+```
+
+## Config file format
+The config file is shared between citibiketools and citibiketrips because they're generally used together.
+
+```
+config.json = {
+    "debug": 0,
+    "path": {
+        "dir": "/tmp",
+        "trips": {
+            "json": "/tmp/alltrips.json",
+            "csv": "/tmp/alltrips.csv"
+        },
+        "stations": {
+            "json": "/tmp/allstations.json",
+            "csv": "/tmp/allstations.csv"
+        },
+        "sqldb": "/tmp/citibike.sqlite3"
+    },
+    "commuter": {
+	    "wait": 300,
+	    "intervalMins": 3,
+	    "stopMins": 60,
+	    "msg": "I'm riding a bike! I've been out for at least %d mins.",
+	    "tz": "America/New_York"
+	},
+    "citibikenyc": {
+        "user": "yourusername",
+        "pass": "yourpassword!",
+        "homeStations": [123, 456],
+        "workStations": [789],
+        "memberId": 123456,
+        "bikeKey": 1234567
+    },
+    "twitter": {
+        "dm": "elwarren",
+        "consumer_key": "yourkey",
+        "consumer_secret": "yoursecret",
+        "access_token_key": "yourtokenkey",
+        "access_token_secret": "yourtokensecret"
+    }
 }
-
-bt.getRecentTrips(function(trips) {
-  // return json of this month's trips 
-  console.log(trips);
-});
-
-bt.getAllTrips(function(trips) {
-  // iterate over all history pages and return hash of complete history
-  console.log(trips);
-});
 ```
 
-Example output:
+## Thanks
 
-```json
-{}
-```
+Special thanks to the Citibike program operated by NYC Bike Share.  I ride these bikes everyday, sometimes 3-4 trips in a single day.
 
-Example config:
+Please do not abuse their servers with excessive polling.  I've read the Citibike TOS http://www.citibikenyc.com/assets/pdf/terms-of-use.pdf
+and it appears to be OK to do this for personal use.
 
-```json
-{}
-```
-
-What else can we do?
-See examples in bin directory
- * Tell twitter you're riding a bike!
- * Send yourself an sms txt if your trip time is approaching 45 minutes.
- * Track your personal station history.
- * Auto-checkin to foursquare when you checkout a bike.
- * what else?
 
