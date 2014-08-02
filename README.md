@@ -7,8 +7,12 @@ history.  To be used to used with the Citibike and CitibikeTrips modules.
 TODO this has not been released to NPM yet
 
 ```
-git clone https://github.com/elwarren/citibiketools.git
-npm install
+$ git clone https://github.com/elwarren/citibiketools.git
+$ cd citibiketools
+$ npm install
+$ cp etc/example-config.json etc/config.json
+ or
+$ cp etc/example-config.json ~/.citibike-config.json
 ```
 
 ## Usage
@@ -33,6 +37,19 @@ $ bin/mergeStationsToSql.js ~/.citibike-config.json
 $ bin/mergeTripsToSql.js ~/.citibike-config.json
 ```
 
+What days of the week do you ride most?  Weekends, weekdays, wednesdays?  Week starts with 0=Sunday.
+
+```
+sqlite> select strftime('%w', startTimestamp, 'unixepoch', 'localtime') dayofweek, count(*) from trips group by 1 order by 1;
+0|5
+1|13
+2|7
+3|12
+4|14
+5|7
+6|6
+```
+
 Show top two trips you've ridden:
 
 ```
@@ -46,19 +63,20 @@ sqlite>  select startStationId, endStationId, count(*)
 212|512|11
 ```
 
-For me this shows my ride to work and my ride home.
-
-What days of the week do you ride most?  Weekends, weekdays, wednesdays?  Week starts with 0=Sunday.
+For me this shows my ride to work and my ride home.  Let's add station names:
 
 ```
-sqlite> select strftime('%w', startTimestamp, 'unixepoch', 'localtime') dayofweek, count(*) from trips group by 1 order by 1;
-0|5
-1|13
-2|7
-3|12
-4|14
-5|7
-6|6
+sqlite> select t.startStationId, sa.label, t.endStationId, sb.label, count(*)
+   ...>   from trips t
+   ...>      , stations sa
+   ...>      , stations sb
+   ...>  where t.startStationId != t.endStationId 
+   ...>    and t.startStationId = sa.id
+   ...>    and t.endStationId = sb.id
+   ...>  group by t.startStationId, t.endStationId 
+   ...>  order by 5 desc limit 2;
+512|W 29 St & 9 Ave|434|9 Ave & W 18 St|12
+212|W 16 St & The High Line|512|W 29 St & 9 Ave|11
 ```
 
 ## Database schema
