@@ -35,12 +35,15 @@ $ bin/getAllTrips.js ~/.citibike-config.json > ~/data/citibike/trips.js
 $ bin/getAllStations.js ~/.citibike-config.json > ~/data/citibike/stations.js
 $ bin/mergeStationsToSql.js ~/.citibike-config.json
 $ bin/mergeTripsToSql.js ~/.citibike-config.json
+$ sqlite3 ~/data/citibike/citibike.sqlite3
+...
 ```
 
 What days of the week do you ride most?  Weekends, weekdays, wednesdays?  Week starts with 0=Sunday.
 
 ```
-sqlite> select strftime('%w', startTimestamp, 'unixepoch', 'localtime') dayofweek, count(*) from trips group by 1 order by 1;
+sqlite> select strftime('%w', startTimestamp, 'unixepoch', 'localtime') dayofweek, count(*) 
+   ...> from trips group by 1 order by 1;
 0|5
 1|13
 2|7
@@ -53,7 +56,6 @@ sqlite> select strftime('%w', startTimestamp, 'unixepoch', 'localtime') dayofwee
 Show top two trips you've ridden:
 
 ```
-$ sqlite3 ~/data/citibike/citibike.sqlite3
 sqlite>  select startStationId, endStationId, count(*)
    ...> from trips 
    ...> where startStationId != endStationId 
