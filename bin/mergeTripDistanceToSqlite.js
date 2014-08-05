@@ -1,7 +1,8 @@
 #!/opt/local/bin/node
  // dump my entire citibike station list to sqlite
- // bicycle speed depends on terrain http://googleblog.blogspot.com/2010/03/biking-directions-added-to-google-maps.html
+// bicycle speed depends on terrain http://googleblog.blogspot.com/2010/03/biking-directions-added-to-google-maps.html
 'use strict';
+// TODO homeStation should move into config file
 // home station 521 is west side of penn station, near post office
 var homeStationId = 521;
 var config = require('../lib/configger.js');
@@ -18,7 +19,7 @@ var db = new sqlite3.Database(config.path.sqldb, function(err) {
 	}
 });
 
-// TODO these functions should move into a library
+// TODO these functions should move into a module
 var dbSaveTripLength = function dbSaveTripLengthF(err, newRow) {
 	// save a distance record to database
 	if (err) return console.log(err);
@@ -27,7 +28,6 @@ var dbSaveTripLength = function dbSaveTripLengthF(err, newRow) {
 	stmt.run(newRow);
 	stmt.finalize();
 }
-
 
 var computeTripLength = function computeTripLengthF(homeId, destId, callback) {
 	// get a distance record from database if exists, else lookup from google and save it
@@ -70,7 +70,7 @@ var computeTripLength = function computeTripLengthF(homeId, destId, callback) {
 								data.destination
 							]);
 
-							// FIXME serve a row reset back instead of passing it along to dbSaveTrip, is this ok?
+							// serve a row record back instead of selecting it back out of db
 							callback(err, {
 								startStationId: homeId,
 								endStationId: destId,
@@ -86,7 +86,7 @@ var computeTripLength = function computeTripLengthF(homeId, destId, callback) {
 				}
 			);
 		} else {
-			// we got a cached row
+			// we got a cached row, skip lookup
 			console.log('cached');
 			callback(null, row);
 		}
@@ -109,19 +109,20 @@ db.serialize(function() {
 		});
 	});
 
-	// estimate trip from my homeStation to everywhere I've been
-	db.each("select startStationId id from trips union select endStationId id from trips", function(err, row) {
-		computeTripLength(homeStationId, row.id, function(err, row) {
-			console.log(JSON.stringify(row));
-		});
-	});
+	// these work but commented out to keep your database small. Since results are cached it doesn't add too much lookup overhead after you get past the quota exceptions
+	// // estimate trip from my homeStation to everywhere I've been
+	// db.each("select startStationId id from trips union select endStationId id from trips", function(err, row) {
+	// 	computeTripLength(homeStationId, row.id, function(err, row) {
+	// 		console.log(JSON.stringify(row));
+	// 	});
+	// });
 
-	// estimate trip from my homeStation to every stations
-	db.each("select id from stations", function(err, row) {
-		computeTripLength(homeStationId, row.id, function(err, row) {
-			console.log(JSON.stringify(row));
-		});
-	});
+	// // estimate trip from my homeStation to every stations
+	// db.each("select id from stations", function(err, row) {
+	// 	computeTripLength(homeStationId, row.id, function(err, row) {
+	// 		console.log(JSON.stringify(row));
+	// 	});
+	// });
 
 	// closing too soon, nodejs is always too soon
 	// db.close();
