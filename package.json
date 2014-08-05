@@ -27,6 +27,7 @@
       "time": "*",
       "cron": "*",
       "twitter": "*",
+      "google-distance": "*",
       "sqlite3": "*",
       "citibike": "*",
       "citibiketrips": "git://github.com/elwarren/citibiketrips.git"
