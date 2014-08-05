@@ -1,7 +1,7 @@
 # Citibike Tools
 
 Some simple node.js programs to manipulate and report on your Citibike trip 
-history.  To be used to used with the Citibike and CitibikeTrips modules.
+history.  To be used with the Citibike and CitibikeTrips modules.
 
 ## Install
 TODO this has not been released to NPM yet
