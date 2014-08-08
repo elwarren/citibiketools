@@ -2,6 +2,10 @@
  // dump my entire citibike station list to sqlite
 // bicycle speed depends on terrain http://googleblog.blogspot.com/2010/03/biking-directions-added-to-google-maps.html
 'use strict';
+// TODO add retrievedAt timestamp
+// TODO does google-distance return different trip estimates at different times of day? This is true for driving, not sure bikes.
+// TODO add routeSource column to track trip estimates from other sources. Example google-distance walking times, drive times. 
+// TODO generate fake trips from google-distance and save as user 1e100 for races later...
 // TODO homeStation should move into config file
 // home station 521 is west side of penn station, near post office
 var homeStationId = 521;
@@ -48,6 +52,7 @@ var computeTripLength = function computeTripLengthF(homeId, destId, callback) {
 					}
 				],
 				function(err, homeDestLatLong) {
+                    // async.parallel returns results in array homeDestLatLong in same order of calls
 					// console.log("Getting distance from " + homeId + " to " + destId + ' latlong ' + homeDestLatLong);
 
 					distance.get({

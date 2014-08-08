@@ -1,7 +1,7 @@
 #!/opt/local/bin/node
  // dump the calendar month's citibike history to json
 'use strict';
-var config = require('../lib/configger');
+var config = require('../lib/configger.js');
 var CitibikeTrips = require('CitibikeTrips');
 var ct = new CitibikeTrips(config);
 
