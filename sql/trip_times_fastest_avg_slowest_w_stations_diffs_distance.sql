@@ -6,10 +6,11 @@
 -- 8 Ave & W 31 St  9 Ave & W 18 St  8           0.8 mi      285         41          326         49          375         90        
 -- W 29 St & 9 Ave  9 Ave & W 18 St  14          0.6 mi      207         79          286         153         439         232       
 -- W 16 St & The H  W 29 St & 9 Ave  15          1.1 mi      267         216         483         624         1107        840       
-
-select sa.label
-     , sb.label
-     , count(*)
+.headers on
+.mode column
+select sa.label StationBeg
+     , sb.label StationEnd
+     , count(*) Trips
      , d.distance
      , min(t.durationSeconds) FASTEST
      , cast(avg(t.durationSeconds) as int) -  min(t.durationSeconds) diffFtoA

@@ -6,8 +6,8 @@
 -- 512             212           3           359         423         500       
 -- 512             434           14          207         286         439       
 -- 521             434           8           285         326         375       
-
-
+.headers on
+.mode column
 select startStationId, endStationId
      , count(*)
      , min(durationSeconds) FASTEST

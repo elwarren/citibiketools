@@ -6,7 +6,8 @@
 -- 512             212           W 29 St & 9 Ave          W 16 St & The H  3           359         423         500       
 -- 512             434           W 29 St & 9 Ave          9 Ave & W 18 St  14          207         286         439       
 -- 521             434           8 Ave & W 31 St          9 Ave & W 18 St  8           285         326         375       
-
+.headers on
+.mode column
 select sa.label
      , sb.label
      , count(*)

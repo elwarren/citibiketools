@@ -7,7 +7,8 @@
 -- W 29 St & 9 Ave  9 Ave & W 18 St  14          207         79          286         153         439         232       
 -- W 16 St & The H  W 29 St & 9 Ave  15          267         216         483         624         1107        840       
 -- startStationId int, endStationId int, distance text, distanceMeters int, duration text, durationSec int, startStationAddr text, endStationAddr text);
-
+.headers on
+.mode column
 select sa.label
      , sb.label
      , count(*)
