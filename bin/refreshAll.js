@@ -12,7 +12,7 @@ var db = new sqlite3.Database(config.path.sqldb, function(err) {
 		console.warn(Date() + ' ' + 'Error opening database file [' + config.path.sqldb + ']');
 		throw err;
 	} else {
-		config.debug > 1 && console.log(Date() + ' ' + 'Opened sqlite3 file [' + config.path.sqldb + ']');
+		console.log(Date() + ' ' + 'Opened sqlite3 file [' + config.path.sqldb + ']');
 	}
 });
 
