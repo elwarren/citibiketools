@@ -9,24 +9,24 @@ var ct = new CitibikeTrips(config);
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(config.path.sqldb, function(err) {
 	if (err) {
-		console.warn('Error opening database file [' + config.path.sqldb + ']');
+		console.warn(Date() + ' ' + 'Error opening database file [' + config.path.sqldb + ']');
 		throw err;
 	} else {
-		console.log('Opened sqlite3 file [' + config.path.sqldb + ']');
+		config.debug > 1 && console.log(Date() + ' ' + 'Opened sqlite3 file [' + config.path.sqldb + ']');
 	}
 });
 
 ct.getRecentTrips(function(err) {
 	if (err) {
-		console.warn(err);
+		console.warn(Date() + ' ' + err);
 		return;
 	}
 
-	console.log('Got trips');
+	console.log(Date() + ' ' + 'Got trips');
 
 	if (config.path.sqldb) {
 		citibike.getStations(null, function(data) {
-			console.log('Got stations');
+			console.log(Date() + ' ' + 'Got stations');
 
 			// id , status,	latitude, longitude, label, stationAddress, availableBikes, availableDocks, nearbyStations;
 			db.serialize(function() {
@@ -63,7 +63,7 @@ ct.getRecentTrips(function(err) {
 
 				stmtStations.finalize();
 				stmtNearby.finalize();
-				console.log('Saved stations');
+				console.log(Date() + ' ' + 'Saved stations');
 
 
 				var stmtTrips = db.prepare("INSERT OR REPLACE INTO trips " +
@@ -78,13 +78,13 @@ ct.getRecentTrips(function(err) {
 						ct.trips[trip].retrievedTimestamp);
 				}
 				stmtTrips.finalize();
-				console.log('Saved trips');
+				console.log(Date() + ' ' + 'Saved trips');
 
 				db.close();
 			});
 		});
 	} else {
-		console.log(JSON.stringify(ct.trips, 0, 2));
+		console.log(Date() + ' ' + JSON.stringify(ct.trips, 0, 2));
 
 	}
 });
