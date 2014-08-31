@@ -18,7 +18,7 @@
 -- %s		seconds since 1970-01-01
 -- %S		seconds: 00-59
 -- %w		day of week 0-6 with Sunday==0
--- %W		week of year: 00-53
+-- %Y-%W		week of year: 00-53
 -- %Y		year: 0000-9999
 -- %%		%
 --
@@ -44,8 +44,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , null sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 1
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 1
  group by 1
  union
 select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
@@ -58,8 +57,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , null sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 2
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 2
  group by 1
  union
  select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
@@ -72,8 +70,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , null sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 3
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 3
  group by 1
  union
  select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
@@ -86,8 +83,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , null sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 4
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 4
  group by 1
  union
  select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
@@ -100,8 +96,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , null sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 5
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 5
  group by 1
  union
  select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
@@ -114,8 +109,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , null sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 6
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 6
  group by 1
  union
  select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
@@ -128,8 +122,7 @@ select strftime('%Y-%W', startTimestamp, 'unixepoch', 'localtime') woy
 	 , count(*) sun
 	 , sum(durationSeconds) durationSeconds
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 4
-   and abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 0
+ where abs(strftime('%w', startTimestamp, 'unixepoch', 'localtime')) = 0
  group by 1
  ) 
 group by 1
