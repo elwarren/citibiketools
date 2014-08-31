@@ -1,5 +1,5 @@
 {
-   "version": "0.0.1",
+   "version": "0.0.2",
    "name": "CitibikeTools",
    "author": "Warren Lindsey <warren.lindsey+npmjs@gmail.com> (https://github.com/elwarren)",
    "description": "do stuff with citibike trip data",
@@ -24,11 +24,13 @@
       "request": "*",
       "async": ">0.8.0",
       "cheerio": "*",
+      "mapbox": "*",
       "time": "*",
       "cron": "*",
       "twitter": "*",
       "google-distance": "*",
       "sqlite3": "*",
+      "fast-csv": "*",
       "citibike": "*",
       "citibiketrips": "git://github.com/elwarren/citibiketrips.git"
    },
