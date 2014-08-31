@@ -5,4 +5,4 @@ select t.id, sa.label, sb.label, t.startStationId, t.endStationId
   from trips t, stations sa, stations sb 
  where t.startStationId = sa.id 
    and t.endStationId = sb.id 
- order by t.startStationId;
+ order by t.id;
