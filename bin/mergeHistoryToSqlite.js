@@ -8,16 +8,16 @@ var csv = require('fast-csv');
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(config.path.sqldb, function(err) {
 	if (err) {
-		console.warn('Error opening database file [' + config.path.sqldb + ']');
+		console.warn(Date() + ' ' + 'Error opening database file [' + config.path.sqldb + ']');
 		throw err;
 	} else {
-		console.log('Opened sqlite3 file [' + config.path.sqldb + ']');
+		console.log(Date() + ' ' + 'Opened sqlite3 file [' + config.path.sqldb + ']');
 	}
 });
 
 var counter = 0;
 var b = 0;
-var bs = 2000;
+var bs = 10000;
 
 db.serialize(function() {
 	// csv header
@@ -32,22 +32,23 @@ db.serialize(function() {
 
 	csv.fromPath(config.path.history.csv)
 		.on("record", function(data) {
-			// console.log(data);
-			// console.log(counter++);
+			// console.log(Date() + ' ' + data);
+			// console.log(Date() + ' ' + counter++);
 			counter++;
 			b++;
 			stmt.run(data);
 			if (b == bs) {
-				stmt.finalize();
+				// stmt.finalize();
 				b = 0;
-				console.log(counter);
+				console.log(Date() + ' ' + counter);
 			}
 		})
 		.on("end", function() {
-			console.log("done");
-			console.log(counter);
-			// stmt.finalize();
-			db.close();
+			console.log(Date() + ' ' + "done");
+			console.log(Date() + ' ' + counter);
+			stmt.finalize(function() {
+				db.close();
+			});
 		});
 
 });

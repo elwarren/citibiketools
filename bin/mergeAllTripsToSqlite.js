@@ -7,10 +7,10 @@ var trips = require(config.path.trips.json);
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(config.path.sqldb, function(err) {
 	if (err) {
-		console.warn('Error opening database file [' + config.path.sqldb + ']');
+		console.warn(Date() + ' ' + 'Error opening database file [' + config.path.sqldb + ']');
 		throw err;
 	} else {
-		console.log('Opened sqlite3 file [' + config.path.sqldb + ']');
+		console.log(Date() + ' ' + 'Opened sqlite3 file [' + config.path.sqldb + ']');
 	}
 });
 
@@ -53,7 +53,7 @@ db.serialize(function() {
 		if (err) {
 			throw err;
 		}
-		console.log(row.totalTrips);
+		console.log(Date() + ' ' + row.totalTrips);
 	});
 });
 
