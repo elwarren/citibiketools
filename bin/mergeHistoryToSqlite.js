@@ -28,7 +28,8 @@ db.serialize(function() {
 	//
 
 	db.run("CREATE TABLE IF NOT EXISTS history (tripDuration number, startTime date, stopTime date, " + "startStationId number, startStationName text, startStationLatitude float, " + "startStationLongitude float, endStationId number, endStationName text, endStationLatitude float, " + "endStationLongitude float, bikeId number, userType text, birthYear number, gender text) ");
-	var stmt = db.prepare("INSERT OR REPLACE INTO history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	// var stmt = db.prepare("INSERT OR REPLACE INTO history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	db.run("BEGIN TRANSACTION");
 
 	csv.fromPath(config.path.history.csv)
 		.on("record", function(data) {
@@ -36,7 +37,8 @@ db.serialize(function() {
 			// console.log(Date() + ' ' + counter++);
 			counter++;
 			b++;
-			stmt.run(data);
+			// stmt.run(data);
+			db.run("INSERT OR REPLACE INTO history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data);
 			if (b == bs) {
 				// stmt.finalize();
 				b = 0;
@@ -44,11 +46,15 @@ db.serialize(function() {
 			}
 		})
 		.on("end", function() {
-			console.log(Date() + ' ' + "done");
-			console.log(Date() + ' ' + counter);
-			stmt.finalize(function() {
+			console.log(Date() + ' ' + "done records[" + counter + "]");
+			db.run("END TRANSACTION", function() {
 				db.close();
 			});
+
+
+			// stmt.finalize(function() {
+			// 	db.close();
+			// });
 		});
 
 });
