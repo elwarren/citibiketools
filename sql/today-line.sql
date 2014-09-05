@@ -1,10 +1,33 @@
--- BAM-028869-WL:CitiBike lindsey$ sqlite3 data/citibike.sqlite3 < citibiketools/sql/today.sql
--- Date        TimeBeg     TimeEnd     Secs        distance    IdBeg       IdEnd       StationBeg       StationEnd       FASTEST     AVERAGE     SLOWEST     Trips
--- ----------  ----------  ----------  ----------  ----------  ----------  ----------  ---------------  ---------------  ----------  ----------  ----------  ----------
--- 2014-09-04  10:27:42    10:32:57    315         0.8 mi      521         434         8 Ave & W 31 St  9 Ave & W 18 St  279         321         375         14
--- 2014-09-04  19:16:10    19:23:07    417         1.1 mi      212         512         W 16 St & The H  W 29 St & 9 Ave  267         473         1107        17
+--       Date = 2014-09-04
+--    TimeBeg = 10:27:42
+--    TimeEnd = 10:32:57
+--       Secs = 315
+--   distance = 0.8 mi
+--      IdBeg = 521
+--      IdEnd = 434
+-- StationBeg = 8 Ave & W 31 St
+-- StationEnd = 9 Ave & W 18 St
+--    FASTEST = 279
+--    AVERAGE = 321
+--    SLOWEST = 375
+--      Trips = 14
+
+--       Date = 2014-09-04
+--    TimeBeg = 19:16:10
+--    TimeEnd = 19:23:07
+--       Secs = 417
+--   distance = 1.1 mi
+--      IdBeg = 212
+--      IdEnd = 512
+-- StationBeg = W 16 St & The High Line
+-- StationEnd = W 29 St & 9 Ave
+--    FASTEST = 267
+--    AVERAGE = 473
+--    SLOWEST = 1107
+--      Trips = 17
+
 .headers on
-.mode column
+.mode line
 select date(t.startTimestamp, 'unixepoch', 'localtime') Date
      , time(t.startTimestamp, 'unixepoch', 'localtime') TimeBeg
      , time(t.endTimestamp, 'unixepoch', 'localtime') TimeEnd
