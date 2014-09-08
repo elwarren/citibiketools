@@ -18,23 +18,18 @@ select date(t.startTimestamp, 'unixepoch', 'localtime') Date
      , tmm.average
      , tmm.slowest
      , tmm.total Trips
-  from trips t
-     , distance d
-     , stations sa
-     , stations sb
+  from trips t left join distance d on t.startStationId = d.startStationId and t.endStationId = d.endStationId
+               left join stations sa on t.startStationId = sa.id 
+               left join stations sb on t.endStationId = sb.id
      , ( select fas.startStationId, fas.endStationId
               , min(fas.durationSeconds) FASTEST
               , cast(avg(fas.durationSeconds) as int) AVERAGE
               , max(fas.durationSeconds) SLOWEST 
               , count(*) TOTAL
-             from trips fas
+           from trips fas
           group by fas.startStationId, fas.endStationId 
        ) tmm
- where t.startStationId = sa.id
-   and t.endStationId = sb.id
-   and t.startStationId = d.startStationId 
-   and t.endStationId = d.endStationId 
-   and t.startStationId = tmm.startStationId 
+ where t.startStationId = tmm.startStationId 
    and t.endStationId = tmm.endStationId 
-   and date(t.startTimestamp, 'unixepoch', 'localtime') == date('now', 'localtime')
- order by 1, 2, 3;
+   and date(t.startTimestamp, 'unixepoch', 'localtime') = date('now', 'localtime')
+ order by 1 asc, 2 asc;

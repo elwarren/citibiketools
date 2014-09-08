@@ -1,3 +1,4 @@
+-- match my private trip history to anonymous public trip history based on timestamp
 -- tripDuration  durationSeconds  startStationId  endStationId  startTime            startDatetime        stopTime             bikeId      userType    birthYear   gender      tripId    
 -- ------------  ---------------  --------------  ------------  -------------------  -------------------  -------------------  ----------  ----------  ----------  ----------  ----------
 -- 439           439              512             434           2014-05-15 11:04:07  2014-05-15 11:04:07  2014-05-15 11:11:26  17530       Subscriber  1976        1           10076869  

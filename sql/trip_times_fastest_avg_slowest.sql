@@ -8,13 +8,15 @@
 -- 521             434           8           285         326         375       
 .headers on
 .mode column
-select startStationId, endStationId
-     , count(*)
+select startStationId
+     , endStationId
+     , count(*) trips
      , min(durationSeconds) FASTEST
      , cast(avg(durationSeconds) as int) AVERAGE
      , max(durationSeconds) SLOWEST 
   from trips 
  where startStationId != endStationId 
- group by startStationId, endStationId 
+ group by startStationId
+        , endStationId 
 having count(*) > 1 
  order by 1, 2, 3;

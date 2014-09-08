@@ -9,4 +9,4 @@ select count(*) Trips
      , sum(durationSeconds)/60 TotalMins
      , sum(durationSeconds)/60/60 TotalHours
   from trips 
- where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now')) - 1;
+ where abs(strftime('%Y%W', startTimestamp, 'unixepoch', 'localtime')) > abs(strftime('%Y%W', 'now', 'localtime')) - 1;
