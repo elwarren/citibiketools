@@ -6,9 +6,9 @@ var CitibikeTrips = require('CitibikeTrips');
 var ct = new CitibikeTrips(config);
 
 ct.getAllTrips(function(err) {
-	if (err) {
-		console.log(err);
-	} else {
-		console.log(JSON.stringify(ct.trips, 0, 2));
-	}
+    if (err) {
+        console.log(Date() + ' ' + err);
+    } else {
+        console.log(Date() + ' ' + JSON.stringify(ct.trips, 0, 2));
+    }
 });

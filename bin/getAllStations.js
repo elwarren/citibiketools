@@ -6,8 +6,7 @@ var Citibike = require('citibike');
 var citibike = new Citibike;
 
 citibike.getStations(null, function(data) {
-	console.log(JSON.stringify(data, null, 2));
+    console.log(Date() + ' ' + JSON.stringify(data, null, 2));
 });
-
 
 /* fin */

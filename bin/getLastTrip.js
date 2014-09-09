@@ -6,5 +6,5 @@ var CitibikeTrips = require('CitibikeTrips');
 var ct = new CitibikeTrips(config);
 
 ct.getLastTrip(function(err, result) {
-	console.log(JSON.stringify(result, null, 2));
+    console.log(Date() + ' ' + JSON.stringify(result, null, 2));
 });

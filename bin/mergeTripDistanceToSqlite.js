@@ -18,7 +18,7 @@ var ls = new LookupStation(config);
 
 var db = new sqlite3.Database(config.path.sqldb, function(err) {
 	if (err) {
-		console.warn('Error opening database file [' + config.path.sqldb + ']');
+		console.warn(Date() + ' ' + 'Error opening database file [' + config.path.sqldb + ']');
 		throw err;
 	}
 });
@@ -26,7 +26,7 @@ var db = new sqlite3.Database(config.path.sqldb, function(err) {
 // TODO these functions should move into a module
 var dbSaveTripLength = function dbSaveTripLengthF(err, newRow) {
 	// save a distance record to database
-	if (err) return console.log(err);
+	if (err) return console.log(Date() + ' ' + err);
 	var stmt = db.prepare("INSERT OR REPLACE INTO distance VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
 	stmt.run(newRow);
@@ -52,17 +52,21 @@ var computeTripLength = function computeTripLengthF(homeId, destId, callback) {
 					}
 				],
 				function(err, homeDestLatLong) {
-                    // async.parallel returns results in array homeDestLatLong in same order of calls
-					// console.log("Getting distance from " + homeId + " to " + destId + ' latlong ' + homeDestLatLong);
+					// async.parallel returns results in array homeDestLatLong in same order of calls
+					// console.log(Date() + ' ' + "Getting distance from " + homeId + " to " + destId + ' latlong ' + homeDestLatLong);
 
+if (err) {
+	// skip lookup
+	return;
+}
 					distance.get({
-							origin: homeDestLatLong[0],
-							destination: homeDestLatLong[1],
+							origin: homeDestLatLong[0].latlong,
+							destination: homeDestLatLong[1].latlong,
 							mode: 'bicycling',
 							units: 'imperial'
 						},
 						function(err, data) {
-							if (err) return console.log(err);
+							if (err) return console.log(Date() + ' ' + err);
 
 							// save result before returning it
 							dbSaveTripLength(err, [homeId,
@@ -92,7 +96,7 @@ var computeTripLength = function computeTripLengthF(homeId, destId, callback) {
 			);
 		} else {
 			// we got a cached row, skip lookup
-			console.log('cached');
+			// console.log(Date() + ' ' + 'cached');
 			callback(null, row);
 		}
 	});
@@ -108,24 +112,33 @@ db.serialize(function() {
 	// startStationId , endStationId , distance , distanceMeters , duration , durationSec , startStationAddr , endStationAddr
 
 	// estimate every trip I've recorded
-	db.each("select distinct startStationId, endStationId from trips order by 1, 2", function(err, row) {
-		computeTripLength(row.startStationId, row.endStationId, function(err, row) {
-			console.log(JSON.stringify(row));
+	db.each("select distinct startStationId, endStationId from trips " +
+		// " where endStationId != 'Station Id - null : null' " +
+		// " and endStationId is not null " +
+		" order by 1, 2", function(err, row) {
+			console.log(Date() + ' Blookup' + JSON.stringify(row));
+			if (row === undefined) {
+				// no row, sumtin aint right
+				// seems to happen when null stations slip in, do nothing
+			} else {
+				computeTripLength(row.startStationId, row.endStationId, function(err, row) {
+					console.log(Date() + ' ' + JSON.stringify(row));
+				});
+			}
 		});
-	});
 
 	// these work but commented out to keep your database small. Since results are cached it doesn't add too much lookup overhead after you get past the quota exceptions
 	// // estimate trip from my homeStation to everywhere I've been
 	// db.each("select startStationId id from trips union select endStationId id from trips", function(err, row) {
 	// 	computeTripLength(homeStationId, row.id, function(err, row) {
-	// 		console.log(JSON.stringify(row));
+	// 		console.log(Date() + ' ' + JSON.stringify(row));
 	// 	});
 	// });
 
 	// // estimate trip from my homeStation to every stations
 	// db.each("select id from stations", function(err, row) {
 	// 	computeTripLength(homeStationId, row.id, function(err, row) {
-	// 		console.log(JSON.stringify(row));
+	// 		console.log(Date() + ' ' + JSON.stringify(row));
 	// 	});
 	// });
 
