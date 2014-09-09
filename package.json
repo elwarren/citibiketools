@@ -16,7 +16,7 @@
    }],
    "private": true,
    "preferGlobal": false,
-   "keywords": ["citibike", "bike", "bicycle", "trip", "bike"],
+   "keywords": ["citibike", "citi", "bicycle", "trip", "bike", "citibikenyc"],
    "engines": {
       "node": "~0.10.24"
    },
